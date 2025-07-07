@@ -1,0 +1,41 @@
+<!-- <p>customer-add-edit works!</p> -->
+
+
+
+
+
+<div class="form-container">
+    <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+        <label>
+            Name
+            <input formControlName="name" />
+        </label>
+
+        <label>
+            Email
+            <input type="email" formControlName="email" />
+        </label>
+
+        <label>
+            Phone
+            <input formControlName="phone" />
+        </label>
+
+        <label>
+            Total Spent
+            <input type="number" formControlName="totalSpent" />
+        </label>
+
+        <label>
+            Last Visit
+            <input type="date" formControlName="lastVisit" />
+        </label>
+
+        <label>
+            Customer Since
+            <input type="date" formControlName="customerSince" />
+        </label>
+
+        <button type="submit" [disabled]="customerForm.invalid">Save</button>
+    </form>
+</div>

@@ -1,0 +1,102 @@
+<!-- <p>sidebar works!</p> -->
+
+<!-- <div class="w-64 h-screen bg-white border-r shadow-md">
+    <div class="flex items-center justify-center h-16 border-b cursor-pointer" (click)="navigateToDashboard()">
+        <img src="assets/logo.png" alt="Logo" class="h-8 mr-2">
+        <span class="text-lg font-bold">POS System</span>
+    </div>
+
+    <nav class="p-4 space-y-2">
+        <a routerLink="/dashboard" routerLinkActive="bg-indigo-100"
+            class="block px-4 py-2 rounded hover:bg-indigo-100">Dashboard</a>
+        <a routerLink="/products" class="block px-4 py-2 rounded hover:bg-indigo-100">Products</a>
+        <a routerLink="/orders" class="block px-4 py-2 rounded hover:bg-indigo-100">Orders</a>
+        <a routerLink="/customers" class="block px-4 py-2 rounded hover:bg-indigo-100">Customers</a>
+        <a routerLink="/bills" class="block px-4 py-2 rounded hover:bg-indigo-100">Bills</a>
+        <a routerLink="/receipts" class="block px-4 py-2 rounded hover:bg-indigo-100">Receipts</a>
+        <a routerLink="/reports" class="block px-4 py-2 rounded hover:bg-indigo-100">Reports</a>
+        <a routerLink="/settings" class="block px-4 py-2 rounded hover:bg-indigo-100">Settings</a>
+    </nav>
+</div> -->
+
+<!-- <nav class="sidebar">
+    <div class="sidebar-header">
+        <i class="icon-pos"></i>
+        <span class="title">POS System</span>
+    </div>
+
+    <ul class="sidebar-menu">
+        <li routerLink="/dashboard" routerLinkActive="active">
+            <i class="icon-dashboard"></i>
+            <span>Dashboard</span>
+        </li>
+        <li routerLink="/products" routerLinkActive="active">
+            <i class="icon-box"></i>
+            <span>Products</span>
+        </li>
+        <li routerLink="/orders" routerLinkActive="active">
+            <i class="icon-cart"></i>
+            <span>Orders</span>
+        </li>
+        <li routerLink="/customers" routerLinkActive="active">
+            <i class="icon-users"></i>
+            <span>Customers</span>
+        </li>
+        <li routerLink="/bills" routerLinkActive="active">
+            <i class="icon-bill"></i>
+            <span>Bills</span>
+        </li>
+        <li routerLink="/receipts" routerLinkActive="active">
+            <i class="icon-receipt"></i>
+            <span>Receipts</span>
+        </li>
+        <li routerLink="/reports" routerLinkActive="active">
+            <i class="icon-chart"></i>
+            <span>Reports</span>
+        </li>
+        <li routerLink="/settings" routerLinkActive="active">
+            <i class="icon-settings"></i>
+            <span>Settings</span>
+        </li>
+    </ul>
+</nav> -->
+
+<!-- <aside class="sidebar" [class.closed]="!open">
+    <div class="logo">
+        <i class="fas fa-store"></i>
+        <span>POS System sidebar</span>
+    </div>
+    <nav>
+        <a routerLink="/dashboard" routerLinkActive="active"><i class="fas fa-home"></i> Dashboard</a>
+        <a routerLink="/products" routerLinkActive="active"><i class="fas fa-box"></i> Products</a>
+        <a routerLink="/orders" routerLinkActive="active"><i class="fas fa-shopping-cart"></i> Orders</a>
+        <a routerLink="/customers" routerLinkActive="active"><i class="fas fa-users"></i> Customers</a>
+        <a routerLink="/bills" routerLinkActive="active"><i class="fas fa-file-invoice"></i> Bills</a>
+        <a routerLink="/receipts" routerLinkActive="active"><i class="fas fa-receipt"></i> Receipts</a>
+        <a routerLink="/reports" routerLinkActive="active"><i class="fas fa-chart-line"></i> Reports</a>
+        <a routerLink="/settings" routerLinkActive="active"><i class="fas fa-cog"></i> Settings</a>
+    </nav>
+</aside> -->
+
+<aside class="sidebar" [class.closed]="!open">
+    <div class="sidebar-header">
+        <div class="logo" (click)="navigateToDashboard()">
+            <i class="fas fa-store"></i>
+            <span>POS System</span>
+        </div>
+        <button class="close-btn" (click)="closeSidebar()">
+            <!-- <i class="fas fa-times"></i> -->
+            <span>Close</span>
+        </button>
+    </div>
+    <nav>
+        <a routerLink="/dashboard" routerLinkActive="active"><i class="fas fa-home"></i> Dashboard</a>
+        <a routerLink="/products" routerLinkActive="active"><i class="fas fa-box"></i> Products</a>
+        <a routerLink="/orders" routerLinkActive="active"><i class="fas fa-shopping-cart"></i> Orders</a>
+        <a routerLink="/customers" routerLinkActive="active"><i class="fas fa-users"></i> Customers</a>
+        <a routerLink="/bills" routerLinkActive="active"><i class="fas fa-file-invoice"></i> Bills</a>
+        <a routerLink="/receipts" routerLinkActive="active"><i class="fas fa-receipt"></i> Receipts</a>
+        <a routerLink="/reports" routerLinkActive="active"><i class="fas fa-chart-line"></i> Reports</a>
+        <a routerLink="/settings" routerLinkActive="active"><i class="fas fa-cog"></i> Settings</a>
+    </nav>
+</aside>

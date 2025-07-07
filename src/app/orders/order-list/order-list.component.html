@@ -1,0 +1,140 @@
+<!-- <p>order-list works!</p> -->
+
+
+<!-- order-list.component.html -->
+<!-- <div class="order-list-container">
+    <div class="filter-bar">
+        <input type="text" placeholder="Search orders..." class="search-box" />
+        <select class="status-filter">
+            <option>All Statuses</option>
+            <option>DRAFT</option>
+            <option>PLACED</option>
+            <option>CANCELLED</option>
+            <option>COMPLETED</option>
+            <option>RETURNED</option>
+        </select>
+        <select class="payment-filter">
+            <option>All Payment Statuses</option>
+            <option>PENDING</option>
+            <option>PAID</option>
+            <option>PARTIALLY PAID</option>
+            <option>FAILED</option>
+            <option>REFUNDED</option>
+        </select>
+        <button class="new-order-button">+ New Order</button>
+    </div>
+
+    <table class="order-table">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of orders">
+                <td><strong>{{ order.orderNumber }}</strong></td>
+                <td>{{ order.date }}</td>
+                <td>{{ order.customer }}</td>
+                <td><span class="status {{ order.status }}">{{ order.status }}</span></td>
+                <td><span class="payment {{ order.payment  }}">{{ order.payment }}</span></td>
+                <td>${{ order.total }}</td>
+                <td>
+                    <button class="action-btn view">👁️</button>
+                    <button class="action-btn edit">✏️</button>
+                    <button class="action-btn delete">🗑️</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div> -->
+
+
+
+
+
+<div class="order-container">
+    <div class="toolbar">
+        <input type="text" placeholder="Search orders..." />
+        <select [(ngModel)]="statusFilter">
+            <option value="">All Statuses</option>
+            <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+        </select>
+        <select [(ngModel)]="paymentFilter">
+            <option value="">All Payment Statuses</option>
+            <option *ngFor="let payment of paymentOptions" [value]="payment">{{ payment }}</option>
+        </select>
+        <button class="new-order">+ New Order</button>
+    </div>
+
+    <table class="order-table">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of filteredOrders()">
+                <td><strong>{{ order.orderId }}</strong></td>
+                <td>{{ order.date }}</td>
+                <td>{{ order.customer }}</td>
+                <td><span class="badge" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span></td>
+                <td><span class="badge" [ngClass]="order.payment.toLowerCase().replace(' ', '-')">{{ order.payment
+                        }}</span></td>
+                <td>${{ order.total.toFixed(2) }}</td>
+                <td class="actions">
+                    <button (click)="openOrder(order)">👁️</button>
+                    <button>✏️</button>
+                    <button>🗑️</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="modal" *ngIf="selectedOrder">
+        <div class="modal-content">
+            <button class="close" (click)="closeModal()">✖</button>
+            <h2>Order {{ selectedOrder.orderId }}</h2>
+            <p><strong>Customer:</strong> {{ selectedOrder.customer }}</p>
+            <p><strong>Date:</strong> {{ selectedOrder.date }}</p>
+            <p><strong>Status:</strong> <span class="badge completed">{{ selectedOrder.status }}</span></p>
+            <p><strong>Payment:</strong> <span class="badge paid">{{ selectedOrder.payment }}</span></p>
+
+            <table class="items-table" *ngIf="selectedOrder.items">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of selectedOrder.items">
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.qty }}</td>
+                        <td>${{ item.price.toFixed(2) }}</td>
+                        <td>${{ getTotal(item).toFixed(2) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="summary" *ngIf="selectedOrder.items">
+                <p>Subtotal: ${{ selectedOrder.total - selectedOrder.total * 0.1 | number: '1.2-2' }}</p>
+                <p>Tax: ${{ selectedOrder.total * 0.1 | number: '1.2-2' }}</p>
+                <p><strong>Total: ${{ selectedOrder.total.toFixed(2) }}</strong></p>
+            </div>
+        </div>
+    </div>
+</div>

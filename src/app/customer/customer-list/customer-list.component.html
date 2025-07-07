@@ -1,0 +1,109 @@
+<!-- <p>customer-list works!</p> -->
+
+
+
+
+<!-- <div class="container">
+    <h2>Customer Management</h2>
+    <div class="search-box">
+        <input type="text" placeholder="Search customers..." [(ngModel)]="searchTerm" />
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Total Spent</th>
+                    <th>Last Visit</th>
+                    <th>Customer Since</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let customer of filteredCustomers">
+                    <td>{{ customer.name }}</td>
+                    <td>
+                        {{ customer.email }}<br />
+                        {{ customer.phone }}
+                    </td>
+                    <td>{{ customer.totalSpent | currency }}</td>
+                    <td>{{ customer.lastVisit | date:'mediumDate' }}</td>
+                    <td>{{ customer.customerSince | date:'mediumDate' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div> -->
+
+
+
+
+<div class="container">
+    <div class="header">
+        <h2>Customer Management</h2>
+        <button class="add-btn" (click)="navigateToAddCustomer()">+ Add Customer</button>
+    </div>
+
+    <div class="search-box">
+        <input type="text" placeholder="Search customers..." [(ngModel)]="searchTerm" />
+    </div>
+
+    <div class="table-wrapper">
+        <table *ngIf="paginatedCustomers.length > 0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Total Spent</th>
+                    <th>Last Visit</th>
+                    <th>Customer Since</th>
+                    <th>Actions</th> <!-- New column -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let customer of paginatedCustomers">
+                    <!-- <td data-label="Name">{{ customer.name }}</td>
+                    <td data-label="Contact">
+                        {{ customer.email }}<br />
+                        {{ customer.phone }}
+                    </td>
+                    <td data-label="Total Spent">{{ customer.totalSpent | currency }}</td>
+                    <td data-label="Last Visit">{{ customer.lastVisit | date: 'mediumDate' }}</td>
+                    <td data-label="Customer Since">{{ customer.customerSince | date: 'mediumDate' }}</td> -->
+                    <td data-label="Name"><span>{{ customer.name }}</span></td>
+                    <td data-label="Contact">
+                        <span>{{ customer.email }}<br />{{ customer.phone }}</span>
+                    </td>
+                    <td data-label="Total Spent"><span>{{ customer.totalSpent | currency }}</span></td>
+                    <td data-label="Last Visit"><span>{{ customer.lastVisit | date: 'mediumDate' }}</span></td>
+                    <td data-label="Customer Since"><span>{{ customer.customerSince | date: 'mediumDate' }}</span></td>
+
+                    <td data-label="Actions">
+                        <span class="actions">
+                            <button class="icon-btn" (click)="editCustomer(customer)">
+                                ✏️
+                            </button>
+                            <button class="icon-btn" (click)="deleteCustomer(customer)">
+                                🗑️
+                            </button>
+                            <label class="switch">
+                                <input type="checkbox" [(ngModel)]="customer.active" />
+                                <span class="slider round"></span>
+                            </label>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div *ngIf="paginatedCustomers.length === 0" class="no-results">
+            No customers found.
+        </div>
+    </div>
+
+    <div class="pagination" *ngIf="totalPages > 1">
+        <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+<!-- <p>dashboard works!</p> -->
+
+<!-- <div class="p-6 bg-gray-50 h-full overflow-auto">
+    <h1 class="text-2xl font-semibold mb-4">Dashboard</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded shadow">
+            <h2 class="text-sm text-gray-500">Daily Sales</h2>
+            <p class="text-xl font-bold">${{ dailySales }}</p>
+            <p class="text-green-500 text-sm">+12.5% from yesterday</p>
+        </div>
+
+        <div class="bg-white p-4 rounded shadow">
+            <h2 class="text-sm text-gray-500">Daily Orders</h2>
+            <p class="text-xl font-bold">{{ dailyOrders }}</p>
+            <p class="text-green-500 text-sm">+8.2% from yesterday</p>
+        </div>
+
+        <div class="bg-white p-4 rounded shadow">
+            <h2 class="text-sm text-gray-500">Avg. Order Value</h2>
+            <p class="text-xl font-bold">${{ avgOrderValue }}</p>
+            <p class="text-red-500 text-sm">-3.1% from last week</p>
+        </div>
+
+        <div class="bg-white p-4 rounded shadow">
+            <h2 class="text-sm text-gray-500">Low Stock Items</h2>
+            <p class="text-xl font-bold">{{ lowStockItems }}</p>
+            <p class="text-blue-500 text-sm">Needs attention</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-semibold mb-2">Revenue Overview</h3>
+            <div class="h-48 bg-gray-100 rounded"></div>
+        </div>
+
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-semibold mb-2">Top Selling Products</h3>
+            <div class="space-y-2">
+                <p>Coffee</p>
+                <p>Burger</p>
+                <p>Tea</p>
+                <p>Pizza</p>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<div class="dashboard-container">
+
+    <!-- Stats cards -->
+    <div class="stats-grid">
+        <div class="stat-card" *ngFor="let stat of stats">
+            <div class="stat-header">
+                <div class="icon">{{ stat.icon }}</div>
+                <div>
+                    <h4>{{ stat.title }}</h4>
+                    <p class="value">{{ stat.value }}</p>
+                    <p class="change" [ngClass]="stat.trend">
+                        {{ stat.trend === 'up' ? '↑' : stat.trend === 'down' ? '↓' : '' }} {{ stat.change }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue and products section -->
+    <div class="charts-grid">
+        <div class="card">
+            <h3>Revenue Overview</h3>
+            <!-- <img src="assets/mock-line-chart.png" alt="Line Chart" /> -->
+            <!-- <ngx-charts-line-chart
+  [view]="[700, 300]"
+  [scheme]="colorScheme"
+  [results]="lineChartData"
+  [gradient]="true"
+  [xAxis]="true"
+  [yAxis]="true"
+  [autoScale]="true">
+</ngx-charts-line-chart> -->
+
+        </div>
+
+        <div class="card">
+            <h3>Top Selling Products</h3>
+            <ul class="bar-chart">
+                <li *ngFor="let item of topProducts">
+                    <span>{{ item }}</span>
+                    <div class="bar"></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Revenue by Category</h3>
+            <img src="assets/mock-bar-chart.png" alt="Category Chart" />
+        </div>
+
+        <div class="card">
+            <h3>Recent Orders</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of recentOrders">
+                        <td>{{ order.order }}</td>
+                        <td>{{ order.customer }}</td>
+                        <td><span class="status" [ngClass]="order.status.toLowerCase().replace(' ', '-')">{{
+                                order.status }}</span></td>
+                        <td>\${{ order.amount.toFixed(2) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

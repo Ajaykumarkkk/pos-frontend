@@ -1,0 +1,39 @@
+<!-- <mat-toolbar color="primary">
+  <span>🛒 My POS App</span>
+  <span class="spacer"></span>
+  <a mat-button routerLink="/login">Login</a>
+  <a mat-button routerLink="/register">Register</a>
+</mat-toolbar> -->
+
+<!-- <router-outlet></router-outlet> -->
+
+<!-- <app-top-navbar *ngIf="showNav"></app-top-navbar>
+
+<div class="app-container">
+  <app-sidebar *ngIf="showNav" class="sidebar"></app-sidebar>
+
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+</div> -->
+
+<!-- <div class="layout">
+  <app-sidebar class="sidebar" [open]="isSidebarOpen" *ngIf="showNav"></app-sidebar>
+
+  <div class="main-container">
+    <app-top-navbar (toggleSidebarEvent)="toggleSidebar()" *ngIf="showNav"></app-top-navbar>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div> -->
+
+<div class="app-container" [class.sidebar-closed]="!isSidebarOpen">
+  <app-sidebar [open]="isSidebarOpen" (closeSidebarEvent)="toggleSidebar()" *ngIf="showNav"></app-sidebar>
+  <div class="main-content">
+    <app-top-navbar [isSidebarOpen]="isSidebarOpen" (toggleSidebarEvent)="toggleSidebar()"
+      *ngIf="showNav"></app-top-navbar>
+    <router-outlet></router-outlet>
+  </div>
+</div>
