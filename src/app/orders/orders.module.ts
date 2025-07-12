@@ -6,6 +6,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
 // import { OrderCreateEditComponent } from './order-create-edit/order-create-edit.component';
 
 import { FormsModule } from '@angular/forms';
+// import { AddBillComponent } from './add-bill/add-bill.component';
 // import { BillListComponent } from './bill-list/bill-list.component'; // ✅ Add this
 
 
@@ -15,6 +16,8 @@ import { FormsModule } from '@angular/forms';
     // OrderCreateEditComponent
 
     // BillListComponent
+
+    // AddBillComponent
   ],
   imports: [
     CommonModule,

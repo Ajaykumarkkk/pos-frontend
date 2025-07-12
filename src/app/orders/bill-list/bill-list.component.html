@@ -1,10 +1,9 @@
-<!-- <p>bill-list works!</p> -->
-
-
-
-
 <div class="container">
-    <h2>Bills Management</h2>
+    <div class="header">
+        <h2>Bills Management</h2>
+        <!-- <h2>Customer Management</h2> -->
+        <button class="add-btn" (click)="navigateToAddBill()">+ Create Bill</button>
+    </div>
     <div class="search-box">
         <input type="text" placeholder="Search bills..." [(ngModel)]="searchTerm" />
     </div>
@@ -16,7 +15,7 @@
                     <th>Bill Number</th>
                     <th>Order Number</th>
                     <th>Date</th>
-                    <th>Due Date</th>
+                    <th>Customer Name</th>
                     <th>Total</th>
                     <th>Remaining</th>
                     <th>Status</th>
@@ -28,12 +27,15 @@
                     <td data-label="Bill Number"><span>{{ bill.billNumber }}</span></td>
                     <td data-label="Order Number"><span>{{ bill.orderNumber }}</span></td>
                     <td data-label="Date"><span>{{ bill.date | date: 'mediumDate' }}</span></td>
-                    <td data-label="Due Date"><span>{{ bill.dueDate ? (bill.dueDate | date: 'mediumDate') :
-                            'N/A'}}</span></td>
+                    <td data-label="Customer Name"><span>{{ bill.customerName }}</span></td>
                     <td data-label="Total"><span>{{ bill.total | currency }}</span></td>
                     <td data-label="Remaining"><span>{{ bill.remaining | currency }}</span></td>
                     <td data-label="Status" style="width: auto;">
-                        <span class="status" [ngClass]="bill.status.toLowerCase()">{{ bill.status }}</span>
+                        <!-- <span class="status" [ngClass]="bill.status.toLowerCase().replace(/\s+/g, '')">{{ bill.status }}</span> -->
+
+                        <span class="status" [ngClass]="formatStatusClass(bill.status)">{{ bill.status }}</span>
+
+                        <!-- <span class="status" [ngClass]="bill.status.toLowerCase()">{{ bill.status }}</span> -->
                     </td>
                     <td data-label="Actions">
                         <button (click)="openModal(bill)">👁️</button>
@@ -41,20 +43,18 @@
                     </td>
                 </tr>
             </tbody>
-        </table><!-- Modal -->
+        </table>
         <div class="modal" *ngIf="showModal">
             <div class="modal-content">
                 <span class="close" (click)="closeModal()">&times;</span>
                 <h3>Order {{ selectedBill?.orderNumber }}</h3>
                 <p><strong>Bill Number:</strong> {{ selectedBill?.billNumber }}</p>
                 <p><strong>Date:</strong> {{ selectedBill?.date | date:'mediumDate' }}</p>
-                <p><strong>Due Date:</strong> {{ selectedBill?.dueDate ? (selectedBill?.dueDate | date:'mediumDate') :
-                    'N/A' }}</p>
+                <p><strong>Customer Name:</strong> {{ selectedBill?.customerName }}</p>
                 <p><strong>Total:</strong> {{ selectedBill?.total | currency }}</p>
                 <p><strong>Remaining:</strong> {{ selectedBill?.remaining | currency }}</p>
                 <p><strong>Status:</strong> {{ selectedBill?.status }}</p>
             </div>
         </div>
-
     </div>
 </div>

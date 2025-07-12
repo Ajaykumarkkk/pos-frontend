@@ -1,4 +1,18 @@
 .container {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .add-btn {
+      background-color: #4f46e5;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
   padding: 1rem;
   background: #ffffff;
   border-radius: 8px;
@@ -139,17 +153,17 @@
     display: inline-block;
   }
 
-  .status.paid {
+  .status.onaccountpayment {
     background-color: #d4f4dd;
     color: #2e7d32;
   }
 
-  .status.open {
+  .status.cash {
     background-color: #e0e7ff;
     color: #1e40af;
   }
 
-  .status.overdue {
+  .status.onaccount {
     background-color: #fdecea;
     color: #b91c1c;
   }

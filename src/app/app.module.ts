@@ -2,11 +2,17 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { ReactiveFormsModule } from '@angular/forms'; // <-- ✅ Add this
+
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeIn from '@angular/common/locales/en-IN';
 
 import { LoginComponent } from './auth/login/login.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
@@ -31,8 +37,10 @@ import { CustomerListComponent } from './customer/customer-list/customer-list.co
 import { CustomerAddEditComponent } from './customer/customer-add-edit/customer-add-edit.component';
 import { BillListComponent } from './orders/bill-list/bill-list.component';
 import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
+import { AddBillComponent } from './orders/add-bill/add-bill.component';
 // import { LayoutModule } from './layout/layout.module';
 
+registerLocaleData(localeIn);
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,6 +55,7 @@ import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
     SaleHistoryComponent,
     CustomerListComponent,
     BillListComponent,
+    AddBillComponent,
     DashboardComponent,
     CustomerAddEditComponent,
     TopNavbarComponent,
@@ -67,7 +76,14 @@ import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
     MatButtonModule
     // LayoutModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    { provide: LOCALE_ID, useValue: 'en-IN' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

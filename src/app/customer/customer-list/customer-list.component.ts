@@ -1,64 +1,16 @@
-// // import { Component } from '@angular/core';
-
-// // @Component({
-// //   selector: 'app-customer-list',
-// //   templateUrl: './customer-list.component.html',
-// //   styleUrls: ['./customer-list.component.scss']
-// // })
-// // export class CustomerListComponent {
-
-// // }
-
-
-
-
-
-
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-customer-list',
-//   templateUrl: './customer-list.component.html',
-//   styleUrls: ['./customer-list.component.scss']
-// })
-// export class CustomerListComponent {
-//   searchTerm = '';
-
-//   customers = [
-//     {
-//       name: 'John Doe',
-//       email: 'john.doe@example.com',
-//       phone: '+1 (555) 123-4567',
-//       totalSpent: 1250.75,
-//       lastVisit: new Date('2023-05-15'),
-//       customerSince: new Date('2022-01-10')
-//     },
-//     {
-//       name: 'Jane Smith',
-//       email: 'jane.smith@example.com',
-//       phone: '+1 (555) 987-6543',
-//       totalSpent: 3420.50,
-//       lastVisit: new Date('2023-05-20'),
-//       customerSince: new Date('2022-02-15')
-//     },
-//     // Add other customers...
-//   ];
-
-//   get filteredCustomers() {
-//     return this.customers.filter(customer =>
-//       customer.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-//     );
-//   }
-// }
-
-
-
-
-
-
-
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CustomerService } from '../customer.service';
+
+interface customer {
+  name: string;
+  id: number;
+  email: string;
+  phone: string;
+  receivableFromCustomer: string;
+  payableToCustomer: string;
+  active: true
+}
 
 @Component({
   selector: 'app-customer-list',
@@ -70,87 +22,111 @@ export class CustomerListComponent {
   currentPage = 1;
   pageSize = 5;
 
-  customers = [
-    {
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      phone: '+1 (555) 123-4567',
-      totalSpent: 1250.75,
-      lastVisit: new Date('2023-05-15'),
-      customerSince: new Date('2022-01-10'),
-      active: true
-    },
-    {
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      phone: '+1 (555) 987-6543',
-      totalSpent: 3420.5,
-      lastVisit: new Date('2023-05-20'),
-      customerSince: new Date('2022-02-15'),
-      active: true
-    },
-    {
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      phone: '+1 (555) 987-6543',
-      totalSpent: 3420.5,
-      lastVisit: new Date('2023-05-20'),
-      customerSince: new Date('2022-02-15'),
-      active: true
-    },
-    {
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      phone: '+1 (555) 987-6543',
-      totalSpent: 3420.5,
-      lastVisit: new Date('2023-05-20'),
-      customerSince: new Date('2022-02-15'),
-      active: true
-    },
-    {
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      phone: '+1 (555) 987-6543',
-      totalSpent: 3420.5,
-      lastVisit: new Date('2023-05-20'),
-      customerSince: new Date('2022-02-15'),
-      active: true
-    },
-    {
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      phone: '+1 (555) 987-6543',
-      totalSpent: 3420.5,
-      lastVisit: new Date('2023-05-20'),
-      customerSince: new Date('2022-02-15'),
-      active: true
-    },
-    {
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      phone: '+1 (555) 987-6543',
-      totalSpent: 3420.5,
-      lastVisit: new Date('2023-05-20'),
-      customerSince: new Date('2022-02-15'),
-      active: true
-    },
-    {
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      phone: '+1 (555) 987-6543',
-      totalSpent: 3420.5,
-      lastVisit: new Date('2023-05-20'),
-      customerSince: new Date('2022-02-15'),
-      active: false
-    },
-    // Add more customers here as needed...
-  ];
+  // customers = [
+  //   {
+  //     name: 'John Doe',
+  //     // email: 'john.doe@example.com',
+  //     phone: '+1 (555) 123-4567',
+  //     receivableFromCustomer: new Date('2023-05-15'),
+  //     payableToCustomer: new Date('2022-01-10'),
+  //     active: true
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     email: 'jane.smith@example.com',
+  //     phone: '+1 (555) 987-6543',
+  //     receivableFromCustomer: new Date('2023-05-20'),
+  //     payableToCustomer: new Date('2022-02-15'),
+  //     active: true
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     email: 'jane.smith@example.com',
+  //     phone: '+1 (555) 987-6543',
+  //     receivableFromCustomer: new Date('2023-05-20'),
+  //     payableToCustomer: new Date('2022-02-15'),
+  //     active: true
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     email: 'jane.smith@example.com',
+  //     phone: '+1 (0000) 987-6543',
+  //     receivableFromCustomer: new Date('2023-05-20'),
+  //     payableToCustomer: new Date('2022-02-15'),
+  //     active: true
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     email: 'jane.smith@example.com',
+  //     phone: '+1 (555) 987-6543',
+  //     receivableFromCustomer: new Date('2023-05-20'),
+  //     payableToCustomer: new Date('2022-02-15'),
+  //     active: true
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     email: 'jane.smith@example.com',
+  //     phone: '+1 (555) 987-6543',
+  //     receivableFromCustomer: new Date('2023-05-20'),
+  //     payableToCustomer: new Date('2022-02-15'),
+  //     active: true
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     email: 'jane.smith@example.com',
+  //     phone: '+1 (555) 987-6543',
+  //     receivableFromCustomer: new Date('2023-05-20'),
+  //     payableToCustomer: new Date('2022-02-15'),
+  //     active: true
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     email: 'jane.smith@example.com',
+  //     phone: '+1 (555) 987-6543',
+  //     receivableFromCustomer: new Date('2023-05-20'),
+  //     payableToCustomer: new Date('2022-02-15'),
+  //     active: false
+  //   },
+  //   // Add more customers here as needed...
+  // ];
+  customers: customer[] = [];
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private customerService: CustomerService
+  ) { }
+
+  ngOnInit(): void {
+    this.loadProducts(); // Load real API data
+  }
+
+  loadProducts() {
+    this.customerService.getAllCustomers().subscribe({
+      next: (res: any) => {
+        if (res.success && res.customers) {
+          this.customers = res.customers.map((item: any) => ({
+            id: item.id || 0, // Ensure id is always a number
+            name: item.name || 'Unnamed',
+            email: item.email || '',
+            phone: item.phone || '',
+            receivableFromCustomer: item.receivableFromCustomer || '0',
+            payableToCustomer: item.payableToCustomer || '0',
+            active: item.active ?? true // fallback to true if undefined
+          }));
+          console.log('Customer list loaded:', this.customers);
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load customers:', err);
+      }
+    });
+  }
 
   get filteredCustomers() {
+    const term = this.searchTerm.toLowerCase();
     return this.customers.filter(customer =>
-      customer.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      customer.name.toLowerCase().includes(term) ||
+      customer.phone.toLowerCase().includes(term)
     );
   }
 
@@ -180,7 +156,9 @@ export class CustomerListComponent {
   }
 
   editCustomer(customer: any) {
-    this.router.navigate(['/customers/edit', customer.name]); // Replace with actual ID if available
+    console.log("customer.id", customer);
+
+    this.router.navigate(['/customers/edit', customer.id]); // Replace with actual ID if available
   }
 
   deleteCustomer(customer: any) {
