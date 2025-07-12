@@ -1,0 +1,97 @@
+<!-- <p>add-bill works!</p> -->
+
+<div class="bill-container">
+    <h2>Add Bill</h2>
+
+    <div class="form-group">
+        <label>Bill Number</label>
+        <input type="text" [value]="billNumber" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Date</label>
+        <input type="date" [(ngModel)]="currentDate" />
+    </div>
+
+    <div class="form-group">
+        <label>Customer Name</label>
+        <select [(ngModel)]="selectedCustomer">
+            <option *ngFor="let customer of customers" [ngValue]="customer">{{ customer.name }}</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Status</label>
+        <select [(ngModel)]="selectedPaymentMethod">
+            <option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</option>
+        </select>
+    </div>
+
+    <!-- <div class="form-group">
+        <label>Order Total</label>
+        <input type="number" [(ngModel)]="orderTotal" />
+    </div> -->
+    <div class="form-group">
+        <label>Order Total</label>
+        <input type="number" [ngModel]="orderTotal" (ngModelChange)="orderTotal = $event" (focus)="onOrderTotalFocus()"
+            (blur)="onOrderTotalBlur()" placeholder="" />
+    </div>
+
+    <!-- <div class="form-group">
+        <label>Customer Pays</label>
+        <input type="number" [(ngModel)]="customerPays" />
+    </div> -->
+    <div class="form-group">
+        <label>Customer Pays</label>
+        <input type="number" [ngModel]="customerPays" (ngModelChange)="customerPays = $event"
+            (focus)="onCustomerPaysFocus()" (blur)="onCustomerPaysBlur()" placeholder="" />
+    </div>
+
+
+    <div class="form-group">
+        <label>Balance Returned</label>
+        <input type="text" [value]="balanceReturned" readonly />
+    </div>
+
+    <div class="action-buttons">
+        <button (click)="printReceipt()">🖨️ Print & Save</button>
+        <button (click)="saveBill()">💾 Save</button>
+        <button (click)="cancelBill()">Cancel</button>
+    </div>
+    <div *ngIf="errorMessage" class="error-message">
+        ⚠️ {{ errorMessage }}
+    </div>
+
+</div>
+
+<!-- Hidden receipt template -->
+<div id="receipt-content" style="display: none">
+    <div class="center bold">SUPERMARKET</div>
+    <div class="center">Lorem ipsum 258<br />City Index · 02025<br />Tel.: +456-468-987-02</div>
+    <hr />
+    <div>Cashier: #3</div>
+    <div>Manager: Eric Steer</div>
+    <hr />
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Qty</th>
+                <th style="text-align:right">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of dummyItems">
+                <td>{{ item.name }}</td>
+                <td>{{ item.qty }}</td>
+                <td style="text-align:right">{{ item.price | currency }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <hr />
+    <div><strong>Sub Total:</strong> <span style="float:right">{{ orderTotal | currency }}</span></div>
+    <div><strong>CASH:</strong> <span style="float:right">{{ customerPays | currency }}</span></div>
+    <div><strong>CHANGE:</strong> <span style="float:right">{{ balanceReturned | currency }}</span></div>
+    <hr />
+    <div class="center">THANK YOU!<br />Glad to see you again!</div>
+</div>
