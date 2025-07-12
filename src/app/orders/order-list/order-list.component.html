@@ -61,15 +61,15 @@
 <div class="order-container">
     <div class="toolbar">
         <input type="text" placeholder="Search orders..." />
-        <!-- <select [(ngModel)]="statusFilter">
+        <select [(ngModel)]="statusFilter">
             <option value="">All Statuses</option>
             <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
-        </select> -->
+        </select>
         <select [(ngModel)]="paymentFilter">
             <option value="">All Payment Statuses</option>
             <option *ngFor="let payment of paymentOptions" [value]="payment">{{ payment }}</option>
         </select>
-        <button class="new-order" (click)="newOrder()">+ New Order</button>
+        <button class="new-order">+ New Order</button>
     </div>
 
     <table class="order-table">
@@ -78,7 +78,7 @@
                 <th>Order #</th>
                 <th>Date</th>
                 <th>Customer</th>
-                <!-- <th>Status</th> -->
+                <th>Status</th>
                 <th>Payment</th>
                 <th>Total</th>
                 <th>Actions</th>
@@ -89,9 +89,9 @@
                 <td><strong>{{ order.orderId }}</strong></td>
                 <td>{{ order.date }}</td>
                 <td>{{ order.customer }}</td>
-                <!-- <td><span class="badge" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span></td> -->
-                <td><span class="badge" [ngClass]="order.payment.toLowerCase().replace(' ', '-')">{{
-                        order.payment}}</span></td>
+                <td><span class="badge" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span></td>
+                <td><span class="badge" [ngClass]="order.payment.toLowerCase().replace(' ', '-')">{{ order.payment
+                        }}</span></td>
                 <td>${{ order.total.toFixed(2) }}</td>
                 <td class="actions">
                     <button (click)="openOrder(order)">👁️</button>
@@ -108,7 +108,7 @@
             <h2>Order {{ selectedOrder.orderId }}</h2>
             <p><strong>Customer:</strong> {{ selectedOrder.customer }}</p>
             <p><strong>Date:</strong> {{ selectedOrder.date }}</p>
-            <!-- <p><strong>Status:</strong> <span class="badge completed">{{ selectedOrder.status }}</span></p> -->
+            <p><strong>Status:</strong> <span class="badge completed">{{ selectedOrder.status }}</span></p>
             <p><strong>Payment:</strong> <span class="badge paid">{{ selectedOrder.payment }}</span></p>
 
             <table class="items-table" *ngIf="selectedOrder.items">

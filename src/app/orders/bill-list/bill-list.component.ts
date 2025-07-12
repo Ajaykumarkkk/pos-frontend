@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { OrdersService } from '../orders.service';
+// import { Component } from '@angular/core';
 
-interface Bills {
-  billNumber: string,
-  orderNumber: string,
-  date: string | Date,
-  customerName: string,
-  total: number,
-  remaining: number,
-  status: string
-}
+// @Component({
+//   selector: 'app-bill-list',
+//   templateUrl: './bill-list.component.html',
+//   styleUrls: ['./bill-list.component.scss']
+// })
+// export class BillListComponent {
+
+// }
+
+
+
+
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-bill-list',
@@ -18,64 +20,57 @@ interface Bills {
   styleUrls: ['./bill-list.component.scss']
 })
 export class BillListComponent {
-  bills: Bills[] = [];
-
-  constructor(
-    private router: Router,
-    private ordersService: OrdersService,
-  ) { }
-
   searchTerm = '';
   selectedBill: any = null;
   showModal = false;
 
-  // bills = [
-  //   {
-  //     billNumber: 'BILL-20230522-001',
-  //     orderNumber: 'ORD-20230522-001',
-  //     date: new Date('2023-05-22'),
-  //     customerName: 'Ajay Kumar',
-  //     total: 125.5,
-  //     remaining: 0,
-  //     status: 'PAID'
-  //   },
-  //   {
-  //     billNumber: 'BILL-20230521-002',
-  //     orderNumber: 'ORD-20230521-002',
-  //     date: new Date('2023-05-21'),
-  //     customerName: 'Vijay Kumar',
-  //     total: 75.25,
-  //     remaining: 0,
-  //     status: 'PAID'
-  //   },
-  //   {
-  //     billNumber: 'BILL-20230520-003',
-  //     orderNumber: 'ORD-20230520-003',
-  //     date: new Date('2023-05-20'),
-  //     customerName: 'Arun Singh',
-  //     total: 200.75,
-  //     remaining: 150.75,
-  //     status: 'OPEN'
-  //   },
-  //   {
-  //     billNumber: 'BILL-20230519-004',
-  //     orderNumber: 'ORD-20230519-004',
-  //     date: new Date('2023-05-19'),
-  //     customerName: 'Rahul Sharma',
-  //     total: 320.5,
-  //     remaining: 320.5,
-  //     status: 'OVERDUE'
-  //   },
-  //   {
-  //     billNumber: 'BILL-20230518-005',
-  //     orderNumber: 'ORD-20230518-005',
-  //     date: new Date('2023-05-18'),
-  //     customerName: 'Sita Devi',
-  //     total: 150,
-  //     remaining: 150,
-  //     status: 'DRAFT'
-  //   }
-  // ];
+  bills = [
+    {
+      billNumber: 'BILL-20230522-001',
+      orderNumber: 'ORD-20230522-001',
+      date: new Date('2023-05-22'),
+      dueDate: null,
+      total: 125.5,
+      remaining: 0,
+      status: 'PAID'
+    },
+    {
+      billNumber: 'BILL-20230521-002',
+      orderNumber: 'ORD-20230521-002',
+      date: new Date('2023-05-21'),
+      dueDate: null,
+      total: 75.25,
+      remaining: 0,
+      status: 'PAID'
+    },
+    {
+      billNumber: 'BILL-20230520-003',
+      orderNumber: 'ORD-20230520-003',
+      date: new Date('2023-05-20'),
+      dueDate: new Date('2023-06-20'),
+      total: 200.75,
+      remaining: 150.75,
+      status: 'OPEN'
+    },
+    {
+      billNumber: 'BILL-20230519-004',
+      orderNumber: 'ORD-20230519-004',
+      date: new Date('2023-05-19'),
+      dueDate: new Date('2023-05-29'),
+      total: 320.5,
+      remaining: 320.5,
+      status: 'OVERDUE'
+    },
+    {
+      billNumber: 'BILL-20230518-005',
+      orderNumber: 'ORD-20230518-005',
+      date: new Date('2023-05-18'),
+      dueDate: null,
+      total: 150,
+      remaining: 150,
+      status: 'DRAFT'
+    }
+  ];
 
   get filteredBills() {
     return this.bills.filter(bill =>
@@ -84,57 +79,9 @@ export class BillListComponent {
     );
   }
 
-  ngOnInit(): void {
-    this.loadProducts(); // Load real API data
-  }
-
-  loadProducts() {
-    this.ordersService.getAllBills().subscribe({
-      next: (res: any) => {
-        if (res.success && res.billdetails) {
-          this.bills = res.billdetails.map((item: any) => ({
-            billNumber: item.billNumber || 'Unknown Bill',
-            orderNumber: item.orderNumber || 'Unknown Order',
-            date: item.date ? new Date(item.date) : new Date(),
-            customerName: item.customer.name || 'Unknown Customer',
-            total: item.billAmount || 0,
-            remaining: item.balanceReturned || 0,
-            status: item.status || 'DRAFT'
-            //   {
-            //     billNumber: 'BILL-20230518-005',
-            //     orderNumber: 'ORD-20230518-005',
-            //     date: new Date('2023-05-18'),
-            //     customerName: 'Sita Devi',
-            //     total: 150,
-            //     remaining: 150,
-            //     status: 'DRAFT'
-            //   }
-            // id: item.id,
-            // name: item.productName || 'Unnamed Product',
-            // price: item.price || 0,
-            // stock: item.stockQuantity || 0,
-            // // imageUrl: item.driveFileUrl || 'https://via.placeholder.com/150'
-            // // imageUrl: `https://drive.google.com/uc?export=view&id=${item.driveFileId}` || 'https://via.placeholder.com/150'
-            // // imageUrl: `https://lh3.googleusercontent.com/d/${item.driveFileId}` || 'https://via.placeholder.com/150'
-            // imageUrl: `https://drive.google.com/thumbnail?id=${item.driveFileId}&sz=s800` || 'https://via.placeholder.com/150'
-            // // <img src="https://drive.google.com/thumbnail?id=FILE_ID&sz=s800" alt="Thumbnai Image">
-          }));
-          console.log('billdetails loaded:', this.bills);
-        }
-      },
-      error: (err) => {
-        console.error('Failed to load products:', err);
-      }
-    });
-  }
-
   openModal(bill: any) {
     this.selectedBill = bill;
     this.showModal = true;
-  }
-
-  navigateToAddBill() {
-    this.router.navigate(['/bill/create']);
   }
 
   closeModal() {
@@ -181,13 +128,10 @@ export class BillListComponent {
   getStatusColor(status: string) {
     switch (status.toUpperCase()) {
       case 'PAID': return '#d4f5d3';
-      case 'Cash': return '#e0ecff';
-      case 'On Account': return '#ffe0e0';
+      case 'OPEN': return '#e0ecff';
+      case 'OVERDUE': return '#ffe0e0';
       case 'DRAFT': return '#f0f0f0';
       default: return '#eee';
     }
-  }
-  formatStatusClass(status: string): string {
-    return status.toLowerCase().replace(/\s+/g, '');
   }
 }
