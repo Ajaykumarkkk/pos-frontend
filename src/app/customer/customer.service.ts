@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class CustomerService {
 
-  private baseUrl = 'http://localhost:3000/v1/customer'; // Change if backend route differs
+  // private baseUrl = 'http://localhost:3000/v1/customer'; // Change if backend route differs
+  private baseUrl = 'https://pos-backend-fjnx.onrender.com/v1/customer'; // Change if backend route differs
 
   constructor(private http: HttpClient) { }
 

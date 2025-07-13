@@ -6,7 +6,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AuthService {
 
-  private baseUrl = 'http://localhost:3000/v1'; // Adjust backend URL
+  // private baseUrl = 'http://localhost:3000/v1'; // Adjust backend URL
+  private baseUrl = 'https://pos-backend-fjnx.onrender.com/v1'; // Adjust backend URL
 
   constructor(private http: HttpClient) { }
 

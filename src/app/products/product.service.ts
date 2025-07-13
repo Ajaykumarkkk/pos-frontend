@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class ProductService {
 
-  private baseUrl = 'http://localhost:3000/v1/product'; // Adjust backend URL
+  // private baseUrl = 'http://localhost:3000/v1/product'; // Adjust backend URL
+  private baseUrl = 'https://pos-backend-fjnx.onrender.com/v1/product'; // Adjust backend URL
 
   constructor(private http: HttpClient) { }
 

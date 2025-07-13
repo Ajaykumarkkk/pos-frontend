@@ -17,8 +17,11 @@ import { Observable } from 'rxjs';
 })
 export class OrdersService {
 
-  private orderBaseUrl = 'http://localhost:3000/v1/order';
-  private billBaseUrl = 'http://localhost:3000/v1/bill';
+  // private orderBaseUrl = 'http://localhost:3000/v1/order';
+  // private billBaseUrl = 'http://localhost:3000/v1/bill';
+
+  private orderBaseUrl = 'https://pos-backend-fjnx.onrender.com/v1/order';
+  private billBaseUrl = 'https://pos-backend-fjnx.onrender.com/v1/bill';
 
   constructor(private http: HttpClient) { }
 
