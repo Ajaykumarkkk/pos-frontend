@@ -351,8 +351,8 @@ export class BillListComponent {
         ${itemsTableHTML}
 
         <div class="row"><span class="label">Total:</span><span>₹${bill.total.toFixed(2)}</span></div>
-        <div class="row"><span class="label">CustomerPays:</span><span>₹${bill.customerPays.toFixed(2)}</span></div>
-        <div class="row"><span class="label">BalanceReturned:</span><span>₹${bill.remaining.toFixed(2)}</span></div>
+        <div class="row"><span class="label">Customer Pays:</span><span>₹${bill.customerPays.toFixed(2)}</span></div>
+        <div class="row"><span class="label">Balance Returned:</span><span>₹${bill.remaining.toFixed(2)}</span></div>
         <div class="row"><span class="label">Status:</span><span>${bill.status}</span></div>
 
         <hr />

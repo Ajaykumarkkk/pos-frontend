@@ -16,8 +16,8 @@
                     <th>Date</th>
                     <th>Customer Name</th>
                     <th>Total</th>
-                    <th>CustomerPays</th>
-                    <th>BalanceReturned</th>
+                    <th>Customer Pays</th>
+                    <th>Balance Returned</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -49,8 +49,8 @@
                 <p><strong>Date:</strong> {{ selectedBill?.date | date:'mediumDate' }}</p>
                 <p><strong>Customer Name:</strong> {{ selectedBill?.customerName }}</p>
                 <p><strong>Total:</strong> {{ selectedBill?.total | currency:'INR':'symbol' }}</p>
-                <p><strong>CustomerPays:</strong> {{ selectedBill?.customerPays | currency:'INR':'symbol' }}</p>
-                <p><strong>BalanceReturned:</strong> {{ selectedBill?.remaining | currency:'INR':'symbol' }}</p>
+                <p><strong>Customer Pays:</strong> {{ selectedBill?.customerPays | currency:'INR':'symbol' }}</p>
+                <p><strong>Balance Returned:</strong> {{ selectedBill?.remaining | currency:'INR':'symbol' }}</p>
                 <p><strong>Status:</strong> {{ selectedBill?.status }}</p>
             </div>
         </div>
