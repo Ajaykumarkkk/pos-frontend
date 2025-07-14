@@ -40,7 +40,8 @@ export class ProductListComponent implements OnInit {
             // imageUrl: item.driveFileUrl || 'https://via.placeholder.com/150'
             // imageUrl: `https://drive.google.com/uc?export=view&id=${item.driveFileId}` || 'https://via.placeholder.com/150'
             // imageUrl: `https://lh3.googleusercontent.com/d/${item.driveFileId}` || 'https://via.placeholder.com/150'
-            imageUrl: `https://drive.google.com/thumbnail?id=${item.driveFileId}&sz=s800` || 'https://via.placeholder.com/150'
+            // imageUrl: `https://drive.google.com/thumbnail?id=${item.driveFileId}&sz=s800` || 'https://via.placeholder.com/150'
+            imageUrl: item.driveFileUrl || 'https://via.placeholder.com/150'
             // <img src="https://drive.google.com/thumbnail?id=FILE_ID&sz=s800" alt="Thumbnai Image">
           }));
           console.log('Products loaded:', this.products);

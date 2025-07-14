@@ -11,6 +11,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,11 @@ export class OrdersService {
   // private orderBaseUrl = 'http://localhost:3000/v1/order';
   // private billBaseUrl = 'http://localhost:3000/v1/bill';
 
-  private orderBaseUrl = 'https://pos-backend-fjnx.onrender.com/v1/order';
-  private billBaseUrl = 'https://pos-backend-fjnx.onrender.com/v1/bill';
+  // private orderBaseUrl = 'https://pos-backend-fjnx.onrender.com/v1/order';
+  // private billBaseUrl = 'https://pos-backend-fjnx.onrender.com/v1/bill';
+
+  private orderBaseUrl = environment.apiBaseUrl + '/order';
+  private billBaseUrl = environment.apiBaseUrl + '/bill';
 
   constructor(private http: HttpClient) { }
 

@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,8 @@ import { Observable } from 'rxjs';
 export class ProductService {
 
   // private baseUrl = 'http://localhost:3000/v1/product'; // Adjust backend URL
-  private baseUrl = 'https://pos-backend-fjnx.onrender.com/v1/product'; // Adjust backend URL
+  // private baseUrl = 'https://pos-backend-fjnx.onrender.com/v1/product'; // Adjust backend URL
+  private baseUrl = environment.apiBaseUrl + '/product'; // Adjust backend URL
 
   constructor(private http: HttpClient) { }
 

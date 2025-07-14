@@ -43,7 +43,7 @@
                 <td>{{ order.customer }}</td>
                 <td><span class="status {{ order.status }}">{{ order.status }}</span></td>
                 <td><span class="payment {{ order.payment  }}">{{ order.payment }}</span></td>
-                <td>${{ order.total }}</td>
+                <td>₹{{ order.total }}</td>
                 <td>
                     <button class="action-btn view">👁️</button>
                     <button class="action-btn edit">✏️</button>
@@ -92,7 +92,7 @@
                 <!-- <td><span class="badge" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span></td> -->
                 <td><span class="badge" [ngClass]="order.payment.toLowerCase().replace(' ', '-')">{{
                         order.payment}}</span></td>
-                <td>${{ order.total.toFixed(2) }}</td>
+                <td>₹{{ order.total.toFixed(2) }}</td>
                 <td class="actions">
                     <button (click)="openOrder(order)">👁️</button>
                     <button>✏️</button>
@@ -124,16 +124,16 @@
                     <tr *ngFor="let item of selectedOrder.items">
                         <td>{{ item.name }}</td>
                         <td>{{ item.qty }}</td>
-                        <td>${{ item.price.toFixed(2) }}</td>
-                        <td>${{ getTotal(item).toFixed(2) }}</td>
+                        <td>₹{{ item.price.toFixed(2) }}</td>
+                        <td>₹{{ getTotal(item).toFixed(2) }}</td>
                     </tr>
                 </tbody>
             </table>
 
             <div class="summary" *ngIf="selectedOrder.items">
-                <p>Subtotal: ${{ selectedOrder.total - selectedOrder.total * 0.1 | number: '1.2-2' }}</p>
-                <p>Tax: ${{ selectedOrder.total * 0.1 | number: '1.2-2' }}</p>
-                <p><strong>Total: ${{ selectedOrder.total.toFixed(2) }}</strong></p>
+                <p>Subtotal: ₹{{ selectedOrder.total - selectedOrder.total * 0.1 | number: '1.2-2' }}</p>
+                <p>Tax: ₹{{ selectedOrder.total * 0.1 | number: '1.2-2' }}</p>
+                <p><strong>Total: ₹{{ selectedOrder.total.toFixed(2) }}</strong></p>
             </div>
         </div>
     </div>

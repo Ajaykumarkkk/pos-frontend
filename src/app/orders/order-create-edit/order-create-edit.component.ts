@@ -83,7 +83,7 @@ export class OrderCreateEditComponent {
   selectedProducts: any[] = [];
   paymentMethod: string = 'Cash';
   discount: number = 0;
-  taxRate: number = 10; // in percentage (default 10%)
+  taxRate: number = 0; // in percentage (default 10%)
   errorMessage: string = '';
 
   get subtotal() {

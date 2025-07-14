@@ -8,6 +8,7 @@ interface Bills {
   date: string | Date,
   customerName: string,
   total: number,
+  customerPays: number,
   remaining: number,
   status: string
 }
@@ -29,54 +30,6 @@ export class BillListComponent {
   selectedBill: any = null;
   showModal = false;
 
-  // bills = [
-  //   {
-  //     billNumber: 'BILL-20230522-001',
-  //     orderNumber: 'ORD-20230522-001',
-  //     date: new Date('2023-05-22'),
-  //     customerName: 'Ajay Kumar',
-  //     total: 125.5,
-  //     remaining: 0,
-  //     status: 'PAID'
-  //   },
-  //   {
-  //     billNumber: 'BILL-20230521-002',
-  //     orderNumber: 'ORD-20230521-002',
-  //     date: new Date('2023-05-21'),
-  //     customerName: 'Vijay Kumar',
-  //     total: 75.25,
-  //     remaining: 0,
-  //     status: 'PAID'
-  //   },
-  //   {
-  //     billNumber: 'BILL-20230520-003',
-  //     orderNumber: 'ORD-20230520-003',
-  //     date: new Date('2023-05-20'),
-  //     customerName: 'Arun Singh',
-  //     total: 200.75,
-  //     remaining: 150.75,
-  //     status: 'OPEN'
-  //   },
-  //   {
-  //     billNumber: 'BILL-20230519-004',
-  //     orderNumber: 'ORD-20230519-004',
-  //     date: new Date('2023-05-19'),
-  //     customerName: 'Rahul Sharma',
-  //     total: 320.5,
-  //     remaining: 320.5,
-  //     status: 'OVERDUE'
-  //   },
-  //   {
-  //     billNumber: 'BILL-20230518-005',
-  //     orderNumber: 'ORD-20230518-005',
-  //     date: new Date('2023-05-18'),
-  //     customerName: 'Sita Devi',
-  //     total: 150,
-  //     remaining: 150,
-  //     status: 'DRAFT'
-  //   }
-  // ];
-
   get filteredBills() {
     return this.bills.filter(bill =>
       bill.billNumber.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
@@ -88,45 +41,64 @@ export class BillListComponent {
     this.loadProducts(); // Load real API data
   }
 
+  // loadProducts() {
+  //   this.ordersService.getAllBills().subscribe({
+  //     next: (res: any) => {
+  //       if (res.success && res.billdetails) {
+  //         this.bills = res.billdetails.map((item: any) => ({
+  //           billNumber: item.billNumber || 'Unknown Bill',
+  //           orderNumber: item.orderNumber || 'Unknown Order',
+  //           date: item.date ? new Date(item.date) : new Date(),
+  //           customerName: item.customer.name || 'Unknown Customer',
+  //           total: item.billAmount || 0,
+  //           remaining: item.customerPays || 0,
+  //           customerPays: item.balanceReturned || 0,
+  //           status: item.status || 'DRAFT'
+  //         }));
+  //         console.log('billdetails loaded:', this.bills);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to load products:', err);
+  //     }
+  //   });
+  // }
+
   loadProducts() {
     this.ordersService.getAllBills().subscribe({
       next: (res: any) => {
         if (res.success && res.billdetails) {
-          this.bills = res.billdetails.map((item: any) => ({
-            billNumber: item.billNumber || 'Unknown Bill',
-            orderNumber: item.orderNumber || 'Unknown Order',
-            date: item.date ? new Date(item.date) : new Date(),
-            customerName: item.customer.name || 'Unknown Customer',
-            total: item.billAmount || 0,
-            remaining: item.balanceReturned || 0,
-            status: item.status || 'DRAFT'
-            //   {
-            //     billNumber: 'BILL-20230518-005',
-            //     orderNumber: 'ORD-20230518-005',
-            //     date: new Date('2023-05-18'),
-            //     customerName: 'Sita Devi',
-            //     total: 150,
-            //     remaining: 150,
-            //     status: 'DRAFT'
-            //   }
-            // id: item.id,
-            // name: item.productName || 'Unnamed Product',
-            // price: item.price || 0,
-            // stock: item.stockQuantity || 0,
-            // // imageUrl: item.driveFileUrl || 'https://via.placeholder.com/150'
-            // // imageUrl: `https://drive.google.com/uc?export=view&id=${item.driveFileId}` || 'https://via.placeholder.com/150'
-            // // imageUrl: `https://lh3.googleusercontent.com/d/${item.driveFileId}` || 'https://via.placeholder.com/150'
-            // imageUrl: `https://drive.google.com/thumbnail?id=${item.driveFileId}&sz=s800` || 'https://via.placeholder.com/150'
-            // // <img src="https://drive.google.com/thumbnail?id=FILE_ID&sz=s800" alt="Thumbnai Image">
-          }));
-          console.log('billdetails loaded:', this.bills);
+          this.bills = res.billdetails.map((item: any) => {
+            const orderProducts = item.orderSale?.orderProductMappings || [];
+
+            const items = orderProducts.map((prod: any) => ({
+              name: prod.productDetail?.productName || 'Unknown',
+              qty: prod.qty,
+              price: prod.price
+            }));
+
+            return {
+              billNumber: item.billNumber,
+              orderNumber: item.orderSale?.orderNumber || 'CUSTOM BILL',
+              date: item.date ? new Date(item.date) : new Date(),
+              customerName: item.customer?.name || 'Unknown Customer',
+              total: item.billAmount || 0,
+              customerPays: item.customerPays || 0,
+              remaining: item.balanceReturned || 0,
+              status: item.status || 'DRAFT',
+              items
+            };
+          });
+
+          console.log('Bills loaded:', this.bills);
         }
       },
       error: (err) => {
-        console.error('Failed to load products:', err);
+        console.error('Failed to load bills:', err);
       }
     });
   }
+
 
   openModal(bill: any) {
     this.selectedBill = bill;
@@ -142,41 +114,258 @@ export class BillListComponent {
     this.selectedBill = null;
   }
 
+  // printBill(bill: any) {
+  //   const printWindow = window.open('', '', 'width=600,height=600');
+  //   if (!printWindow) return;
+
+  //   printWindow.document.write(`
+  //     <html>
+  //       <head>
+  //         <style>
+  //           body { font-family: Arial, sans-serif; padding: 20px; }
+  //           h2 { margin-top: 0; }
+  //           .row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  //           .label { font-weight: bold; }
+  //           .status {
+  //             padding: 4px 10px;
+  //             border-radius: 10px;
+  //             font-weight: bold;
+  //             background-color: ${this.getStatusColor(bill.status)};
+  //           }
+  //         </style>
+  //       </head>
+  //       <body>
+  //         <h2>${bill.orderNumber}</h2>
+  //         <div class="row"><span class="label">Customer:</span><span>John Doe</span></div>
+  //         <div class="row"><span class="label">Date:</span><span>${bill.date.toDateString()}</span></div>
+  //         <div class="row"><span class="label">Status:</span><span class="status">${bill.status}</span></div>
+  //         <div class="row"><span class="label">Total:</span><span>$${bill.total.toFixed(2)}</span></div>
+  //         <div class="row"><span class="label">CustomerPays:</span><span>$${bill.customerPays.toFixed(2)}</span></div>
+  //         <div class="row"><span class="label">BalanceReturned:</span><span>$${bill.remaining.toFixed(2)}</span></div>
+  //         <hr />
+  //         <p style="text-align: center;">Thank you!</p>
+  //       </body>
+  //     </html>
+  //   `);
+  //   printWindow.document.close();
+  //   printWindow.print();
+  // }
+
+  // printBill(bill: any) {
+  //   const printWindow = window.open('', '', 'width=600,height=600');
+  //   if (!printWindow) return;
+
+  //   interface BillItem {
+  //     name: string;
+  //     qty: number;
+  //     price: number;
+  //   }
+
+  //   const itemRows: string = (bill.items as BillItem[]).map((item: BillItem) => `
+  //   <tr>
+  //     <td>${item.name}</td>
+  //     <td>${item.qty}</td>
+  //     <td>₹${item.price.toFixed(2)}</td>
+  //     <td>₹${(item.qty * item.price).toFixed(2)}</td>
+  //   </tr>
+  // `).join('');
+
+  //   printWindow.document.write(`
+  //   <html>
+  //     <head>
+  //       <style>
+  //         body { font-family: Arial, sans-serif; padding: 20px; }
+  //         h2 { margin-top: 0; }
+  //         .row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  //         .label { font-weight: bold; }
+  //         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  //         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  //       </style>
+  //     </head>
+  //     <body>
+  //       <h2>Order: ${bill.orderNumber}</h2>
+  //       <div class="row"><span class="label">Bill Number:</span><span>${bill.billNumber}</span></div>
+  //       <div class="row"><span class="label">Date:</span><span>${new Date(bill.date).toLocaleDateString('en-GB')}</span></div>
+  //       <div class="row"><span class="label">Customer Name:</span><span>${bill.customerName}</span></div>
+
+  //       <table>
+  //         <thead>
+  //           <tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr>
+  //         </thead>
+  //         <tbody>
+  //           ${itemRows}
+  //         </tbody>
+  //       </table>
+
+  //       <div class="row"><span class="label">Total:</span><span>₹${bill.total.toFixed(2)}</span></div>
+  //       <div class="row"><span class="label">CustomerPays:</span><span>₹${bill.customerPays.toFixed(2)}</span></div>
+  //       <div class="row"><span class="label">BalanceReturned:</span><span>₹${bill.remaining.toFixed(2)}</span></div>
+  //       <div class="row"><span class="label">Status:</span><span>${bill.status}</span></div>
+
+  //       <hr />
+  //       <p style="text-align: center;">Thank you!</p>
+  //     </body>
+  //   </html>
+  // `);
+
+  //   printWindow.document.close();
+  //   printWindow.print();
+  // }
+  // printBill(bill: any) {
+  //   const printWindow = window.open('', '', 'width=600,height=700');
+  //   if (!printWindow) return;
+
+  //   interface BillItem {
+  //     name: string;
+  //     qty: number;
+  //     price: number;
+  //   }
+
+  //   const itemRows: string = (bill.items as BillItem[]).map((item: BillItem) => `
+  //   <tr>
+  //     <td style="text-align: left; padding: 8px;">${item.name}</td>
+  //     <td style="text-align: right; padding: 8px;">${item.qty}</td>
+  //     <td style="text-align: right; padding: 8px;">₹${item.price.toFixed(2)}</td>
+  //     <td style="text-align: right; padding: 8px;">₹${(item.qty * item.price).toFixed(2)}</td>
+  //   </tr>
+  // `).join('');
+
+  //   printWindow.document.write(`
+  //   <html>
+  //     <head>
+  //       <title>Print Bill</title>
+  //       <style>
+  //         body { font-family: Arial, sans-serif; padding: 20px; }
+  //         h2 { text-align: center; margin: 0 0 10px 0; font-weight: bold; }
+  //         h3 { margin-bottom: 20px; text-align: center; }
+  //         .row { display: flex; justify-content: space-between; margin: 6px 0; }
+  //         .label { font-weight: bold; }
+  //         table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  //         th, td { border: 1px solid #ccc; padding: 8px; }
+  //         th { text-align: left; background: #f9f9f9; }
+  //         td:nth-child(2), td:nth-child(3), td:nth-child(4) {
+  //           text-align: right;
+  //         }
+  //       </style>
+  //     </head>
+  //     <body>
+  //       <h2>ANBUKODI AGRO TRADERS</h2>
+  //       <h3>Order: ${bill.orderNumber || 'CUSTOM BILL'}</h3>
+
+  //       <div class="row"><span class="label">Bill Number:</span><span>${bill.billNumber}</span></div>
+  //       <div class="row"><span class="label">Date:</span><span>${new Date(bill.date).toLocaleDateString('en-GB')}</span></div>
+  //       <div class="row"><span class="label">Customer Name:</span><span>${bill.customerName}</span></div>
+
+  //       <table>
+  //         <thead>
+  //           <tr>
+  //             <th>Item</th>
+  //             <th>Qty</th>
+  //             <th>Price</th>
+  //             <th>Total</th>
+  //           </tr>
+  //         </thead>
+  //         <tbody>
+  //           ${itemRows}
+  //         </tbody>
+  //       </table>
+
+  //       <div class="row"><span class="label">Total:</span><span>₹${bill.total.toFixed(2)}</span></div>
+  //       <div class="row"><span class="label">CustomerPays:</span><span>₹${bill.customerPays.toFixed(2)}</span></div>
+  //       <div class="row"><span class="label">BalanceReturned:</span><span>₹${bill.remaining.toFixed(2)}</span></div>
+  //       <div class="row"><span class="label">Status:</span><span>${bill.status}</span></div>
+
+  //       <hr />
+  //       <p style="text-align: center;">Thank you!</p>
+  //     </body>
+  //   </html>
+  // `);
+
+  //   printWindow.document.close();
+  //   printWindow.print();
+  // }
+
   printBill(bill: any) {
-    const printWindow = window.open('', '', 'width=600,height=600');
+    const printWindow = window.open('', '', 'width=600,height=700');
     if (!printWindow) return;
 
+    interface BillItem {
+      name: string;
+      qty: number;
+      price: number;
+    }
+
+    const items = bill.items as BillItem[] || [];
+
+    const itemRows: string = items.map((item: BillItem) => `
+    <tr>
+      <td style="text-align: left; padding: 8px;">${item.name}</td>
+      <td style="text-align: right; padding: 8px;">${item.qty}</td>
+      <td style="text-align: right; padding: 8px;">₹${item.price.toFixed(2)}</td>
+      <td style="text-align: right; padding: 8px;">₹${(item.qty * item.price).toFixed(2)}</td>
+    </tr>
+  `).join('');
+
+    const itemsTableHTML = items.length > 0 ? `
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${itemRows}
+      </tbody>
+    </table>
+  ` : '';
+
     printWindow.document.write(`
-      <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h2 { margin-top: 0; }
-            .row { display: flex; justify-content: space-between; margin-bottom: 8px; }
-            .label { font-weight: bold; }
-            .status {
-              padding: 4px 10px;
-              border-radius: 10px;
-              font-weight: bold;
-              background-color: ${this.getStatusColor(bill.status)};
-            }
-          </style>
-        </head>
-        <body>
-          <h2>${bill.orderNumber}</h2>
-          <div class="row"><span class="label">Customer:</span><span>John Doe</span></div>
-          <div class="row"><span class="label">Date:</span><span>${bill.date.toDateString()}</span></div>
-          <div class="row"><span class="label">Status:</span><span class="status">${bill.status}</span></div>
-          <div class="row"><span class="label">Total:</span><span>$${bill.total.toFixed(2)}</span></div>
-          <div class="row"><span class="label">Remaining:</span><span>$${bill.remaining.toFixed(2)}</span></div>
-          <hr />
-          <p style="text-align: center;">Thank you!</p>
-        </body>
-      </html>
-    `);
+    <html>
+      <head>
+        <title>Print Bill</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          h2 { text-align: center; margin: 0 0 10px 0; font-weight: bold; }
+          h3 { margin-bottom: 20px; text-align: center; }
+          .row { display: flex; justify-content: space-between; margin: 6px 0; }
+          .label { font-weight: bold; }
+          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+          th, td { border: 1px solid #ccc; padding: 8px; }
+          th { text-align: left; background: #f9f9f9; }
+          td:nth-child(2), td:nth-child(3), td:nth-child(4) {
+            text-align: right;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>ANBUKODI AGRO TRADERS</h2>
+        <h3>Order: ${bill.orderNumber || 'CUSTOM BILL'}</h3>
+
+        <div class="row"><span class="label">Bill Number:</span><span>${bill.billNumber}</span></div>
+        <div class="row"><span class="label">Date:</span><span>${new Date(bill.date).toLocaleDateString('en-GB')}</span></div>
+        <div class="row"><span class="label">Customer Name:</span><span>${bill.customerName}</span></div>
+
+        ${itemsTableHTML}
+
+        <div class="row"><span class="label">Total:</span><span>₹${bill.total.toFixed(2)}</span></div>
+        <div class="row"><span class="label">CustomerPays:</span><span>₹${bill.customerPays.toFixed(2)}</span></div>
+        <div class="row"><span class="label">BalanceReturned:</span><span>₹${bill.remaining.toFixed(2)}</span></div>
+        <div class="row"><span class="label">Status:</span><span>${bill.status}</span></div>
+
+        <hr />
+        <p style="text-align: center;">Thank you!</p>
+      </body>
+    </html>
+  `);
+
     printWindow.document.close();
     printWindow.print();
   }
+
+
 
   getStatusColor(status: string) {
     switch (status.toUpperCase()) {

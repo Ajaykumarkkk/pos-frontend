@@ -150,11 +150,12 @@ import { ProductService } from '../product.service';
 })
 export class ProductCreateComponent implements OnInit {
   productForm!: FormGroup;
-  categories: string[] = ['Electronics', 'Clothing', 'Home & Garden', 'Books', 'Health'];
+  // categories: string[] = ['Electronics', 'Clothing', 'Home & Garden', 'Books', 'Health'];
   selectedImage: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
   productId: number | null = null; // to hold the id if editing
+  errorMessage: string = '';
 
   constructor(
     private productService: ProductService,
@@ -166,12 +167,12 @@ export class ProductCreateComponent implements OnInit {
   ngOnInit(): void {
     this.productForm = this.fb.group({
       productName: ['', Validators.required],
-      category: ['', Validators.required],
-      description: ['', Validators.required],
-      price: [0, [Validators.required, Validators.min(0)]],
+      // category: ['', Validators.required],
+      description: [''],
+      price: [, [Validators.required, Validators.min(0)]],
       sku: ['', Validators.required],
       barcode: [''],
-      stockQuantity: [0, [Validators.required, Validators.min(0)]],
+      stockQuantity: [, [Validators.required, Validators.min(0)]],
       lowStockThreshold: [5, [Validators.required, Validators.min(0)]],
       inventoryStatus: ['In Stock', Validators.required]
     });
@@ -195,7 +196,7 @@ export class ProductCreateComponent implements OnInit {
         // Patch form values
         this.productForm.patchValue({
           productName: product.productName,
-          category: product.category,
+          // category: product.category,
           description: product.description,
           price: product.price,
           sku: product.sku,

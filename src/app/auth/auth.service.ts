@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -7,12 +10,14 @@ import { HttpClient } from '@angular/common/http';
 export class AuthService {
 
   // private baseUrl = 'http://localhost:3000/v1'; // Adjust backend URL
-  private baseUrl = 'https://pos-backend-fjnx.onrender.com/v1'; // Adjust backend URL
+  // private baseUrl = 'https://pos-backend-fjnx.onrender.com/v1'; // Adjust backend URL
+  private baseUrl = environment.apiBaseUrl; // Adjust backend URL
 
   constructor(private http: HttpClient) { }
 
 
   getAllDepartment() {
+    // console.log(environment.apiBaseUrl);
     return this.http.get(`${this.baseUrl}/department`);
   }
 
