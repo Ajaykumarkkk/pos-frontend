@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CustomerService } from 'src/app/customer/customer.service';
 import { ProductService } from 'src/app/products/product.service';
 import { OrdersService } from '../orders.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 interface Product {
   id: number;
@@ -14,6 +15,7 @@ interface Product {
 interface customer {
   name: string;
   id: number;
+  phone: number;
 }
 
 @Component({
@@ -36,8 +38,8 @@ export class OrderCreateEditComponent {
   ) { }
 
   ngOnInit(): void {
-    this.loadProducts(); // Load real API data
-    this.loadCustomers(); // Load real API data
+    this.loadProducts();
+    this.loadCustomers();
   }
 
   loadProducts() {
@@ -64,7 +66,8 @@ export class OrderCreateEditComponent {
       next: (res: any) => {
         if (res.success && res.customers) {
           this.customers = res.customers.map((item: any) => ({
-            id: item.id || 0, // Ensure id is always a number
+            id: item.id || 0,
+            phone: item.phone || 0,
             name: (item.name + ' கடன் ' + item.receivableFromCustomer)
           }));
           console.log('Customer list loaded:', this.customers);
@@ -83,7 +86,7 @@ export class OrderCreateEditComponent {
   selectedProducts: any[] = [];
   paymentMethod: string = 'Cash';
   discount: number = 0;
-  taxRate: number = 0; // in percentage (default 10%)
+  taxRate: number = 0;
   errorMessage: string = '';
 
   get subtotal() {
@@ -98,27 +101,54 @@ export class OrderCreateEditComponent {
     return this.subtotal + this.tax - this.discount;
   }
 
+  // addProduct() {
+  //   if (this.selectedProduct && this.quantity > 0) {
+  //     this.selectedProducts.push({
+  //       id: this.selectedProduct.id,
+  //       name: this.selectedProduct.name,
+  //       price: this.selectedProduct.price,
+  //       qty: this.quantity,
+  //       total: this.selectedProduct.price * this.quantity
+  //     });
+  //     this.quantity = 1;
+  //     this.selectedProduct = null;
+  //   }
+  // }
   addProduct() {
     if (this.selectedProduct && this.quantity > 0) {
-      this.selectedProducts.push({
-        id: this.selectedProduct.id,
-        name: this.selectedProduct.name,
-        price: this.selectedProduct.price,
-        qty: this.quantity,
-        total: this.selectedProduct.price * this.quantity
-      });
+      const selected = this.products.find(p => p.id === this.selectedProduct);
+      if (selected) {
+        this.selectedProducts.push({
+          id: selected.id,
+          name: selected.name,
+          price: selected.price,
+          qty: this.quantity,
+          total: selected.price * this.quantity
+        });
+      }
       this.quantity = 1;
       this.selectedProduct = null;
     }
   }
 
+
   removeProduct(index: number) {
     this.selectedProducts.splice(index, 1);
   }
 
+  customSearchFn(term: string, item: any): boolean {
+    term = term.toLowerCase();
+    return item.name.toLowerCase().includes(term) || item.phone.toString().includes(term);
+  }
+
+
   placeOrder() {
-    // Validation check
-    if (!this.selectedCustomer) {
+    // if (!this.selectedCustomer) {
+    //   this.errorMessage = 'Please select a customer.';
+    //   return;
+    // }
+    const selectedCustomerObj = this.customers.find(c => c.id === this.selectedCustomer);
+    if (!selectedCustomerObj) {
       this.errorMessage = 'Please select a customer.';
       return;
     }
@@ -136,9 +166,9 @@ export class OrderCreateEditComponent {
       return;
     }
 
-    this.errorMessage = ''; // Clear error on valid input
+    this.errorMessage = '';
     const orderPayload = {
-      customer: this.selectedCustomer,
+      customer: selectedCustomerObj,
       products: this.selectedProducts.map(item => ({
         id: item.id,
         name: item.name,
@@ -187,6 +217,96 @@ export class OrderCreateEditComponent {
 
   get balanceReturned(): number {
     return Math.max((this.customerPays ?? 0) - (this.total ?? 0), 0);
+  }
+
+  latestSearchTerm: string = '';
+  addCustomerName: string = '';
+  addCustomerPhone: string = '';
+  showAddCustomerModal: boolean = false;
+
+  nameTouched: boolean = false;
+  phoneTouched: boolean = false;
+
+  onCustomerSearch(term: string) {
+    this.latestSearchTerm = term;
+  }
+
+  openAddCustomerModal(searchTerm: string, selectRef: NgSelectComponent) {
+    this.addCustomerName = searchTerm.trim();
+    this.addCustomerPhone = searchTerm.trim();
+    this.showAddCustomerModal = true;
+
+    // 👇 Close the dropdown
+    selectRef.close();
+  }
+
+  // openAddCustomerModal() {
+  //   this.addCustomerName = '';
+  //   this.addCustomerPhone = '';
+  //   this.showAddCustomerModal = true;
+  // }
+  // openAddCustomerModal(searchTerm: string = '') {
+  //   console.log('Opening add customer modal with search term:', searchTerm);
+
+  //   this.addCustomerName = searchTerm || '';
+  //   this.addCustomerPhone = '';
+  //   this.showAddCustomerModal = true;
+  // }
+
+
+  submitNewCustomer() {
+    this.nameTouched = true;
+    this.phoneTouched = true;
+
+    const phoneRegex = /^\d{10}$/;
+
+    if (!this.addCustomerName || !this.addCustomerPhone || !phoneRegex.test(this.addCustomerPhone)) {
+      return; // Stop submission if invalid
+    }
+
+    const newCustomer = {
+      name: this.addCustomerName,
+      phone: this.addCustomerPhone
+    };
+
+    this.customerService.createCustomer(newCustomer).subscribe({
+      next: (res: any) => {
+        if (res.success && res.employee) {
+          const formatted = {
+            id: res.employee.id,
+            name: res.employee.name,
+            phone: res.employee.phone,
+            display: `${res.employee.name} கடன் 0`
+          };
+          this.customers.push(formatted);
+          this.loadCustomers();
+          this.selectedCustomer = formatted.id;
+          this.showAddCustomerModal = false;
+
+          // Reset fields and validation
+          this.addCustomerName = '';
+          this.addCustomerPhone = '';
+          this.nameTouched = false;
+          this.phoneTouched = false;
+        }
+      },
+      error: (err) => {
+        console.error('Error adding customer:', err);
+      }
+    });
+  }
+  closeAddCustomerModal() {
+    this.showAddCustomerModal = false;
+    this.nameTouched = false;
+    this.phoneTouched = false;
+  }
+
+  get isPhoneInvalid(): boolean {
+    return this.phoneTouched && !/^\d{10}$/.test(this.addCustomerPhone || '');
+  }
+
+  isAddCustomerPhoneInvalid(): boolean {
+    return this.phoneTouched && !/^\d{10}$/.test(this.addCustomerPhone || '');
   }
 }
 

@@ -17,6 +17,8 @@
 
 
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { DashboardService } from '../dashboard.service';
 // import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @Component({
@@ -39,20 +41,6 @@ export class DashboardComponent {
       change: '+8.2%',
       trend: 'up',
       icon: '🛒'
-    },
-    {
-      title: 'Avg. Order Value',
-      value: '$39.20',
-      change: '-3.1%',
-      trend: 'down',
-      icon: '🪙'
-    },
-    {
-      title: 'Low Stock Items',
-      value: '5',
-      change: 'Needs attention',
-      trend: 'warning',
-      icon: '⚠️'
     }
   ];
 
@@ -86,11 +74,84 @@ export class DashboardComponent {
     }
   ];
 
-  // barChartData = [
-  //   { "name": "Electronics", "value": 1200 },
-  //   { "name": "Meals", "value": 600 },
-  //   ...
-  // ];
+  constructor(
+    private router: Router,
+    private ordersService: DashboardService,
+  ) { }
 
+  ngOnInit(): void {
+    this.loadDashBoardReports(); // Load real API data
+  }
+
+  // loadDashBoardReports() {
+  //   this.ordersService.getdashboardDetails().subscribe({
+  //     next: (res: any) => {
+  //       if (res.success && res.reportDetails) {
+  //         console.log("Dashboard reports loaded:", res.reportDetails);
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to load bills:', err);
+  //     }
+  //   });
+  // }
+
+  loadDashBoardReports() {
+    this.ordersService.getdashboardDetails().subscribe({
+      next: (res: any) => {
+        if (res.success && res.reportDetails && res.reportDetails.length > 0) {
+          const data = res.reportDetails[0];
+
+          this.stats = [
+            {
+              title: 'Daily Sales',
+              value: `₹${data.dailySales.toFixed(2)}`,
+              change: '', // You can add logic to calculate percentage change
+              trend: '',
+              icon: '💲'
+            },
+            {
+              title: 'Monthly Sales',
+              value: `₹${data.monthlySales.toFixed(2)}`,
+              change: '',
+              trend: '',
+              icon: '📆'
+            },
+            {
+              title: 'Today On Account',
+              value: `₹${data.todayOnAccount.toFixed(2)}`,
+              change: '',
+              trend: '',
+              icon: '📌'
+            },
+            {
+              title: 'Monthly On Account',
+              value: `₹${data.monthlyOnAccount.toFixed(2)}`,
+              change: '',
+              trend: '',
+              icon: '📊'
+            },
+            {
+              title: 'Today Order Count',
+              value: data.todayOrderCount,
+              change: '',
+              trend: '',
+              icon: '🛒'
+            },
+            {
+              title: 'Monthly Order Count',
+              value: data.monthlyOrderCount,
+              change: '',
+              trend: '',
+              icon: '📦'
+            }
+          ];
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load dashboard reports:', err);
+      }
+    });
+  }
 
 }

@@ -25,6 +25,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AuthService } from './auth/auth.service';
 import { NavigationEnd, Router } from '@angular/router';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { TopNavbarComponent } from './layout/top-navbar/top-navbar.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -68,6 +69,7 @@ registerLocaleData(localeIn);
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule, // <-- ✅ Add this
+    NgSelectModule,
     BrowserAnimationsModule,
     MatToolbarModule,
     MatFormFieldModule,

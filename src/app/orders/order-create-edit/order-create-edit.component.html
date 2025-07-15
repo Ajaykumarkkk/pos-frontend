@@ -2,9 +2,13 @@
     <div class="product-section">
         <h2>Add Products</h2>
         <div class="product-controls">
-            <select [(ngModel)]="selectedProduct">
+            <!-- <select [(ngModel)]="selectedProduct">
                 <option *ngFor="let product of products" [ngValue]="product">{{ product.name }}</option>
-            </select>
+            </select> -->
+
+            <ng-select [items]="products" bindLabel="name" bindValue="id" [(ngModel)]="selectedProduct" placeholder=""
+                [searchable]="true" [clearable]="true"></ng-select>
+
             <input type="number" [(ngModel)]="quantity" min="1" />
             <button (click)="addProduct()">
                 <span>＋</span> Add
@@ -27,7 +31,6 @@
                     <td>{{ item.qty }}</td>
                     <td>{{ item.price | currency:'INR':'symbol' }}</td>
                     <td>{{ item.price * item.qty | currency:'INR':'symbol' }}</td>
-                    <!-- <td><button (click)="removeProduct(i)">&#x1F5D1;</button></td> -->
                     <td><button (click)="removeProduct(i)"><svg xmlns="http://www.w3.org/2000/svg" width="30px"
                                 height="30px" viewBox="0 0 1024 1024" class="icon" version="1.1">
                                 <path d="M724.3 198H296.1l54.1-146.6h320z" fill="#FAFCFB" />
@@ -72,9 +75,40 @@
         <h2>Order Summary</h2>
 
         <label>Customer
-            <select [(ngModel)]="selectedCustomer">
-                <option *ngFor="let customer of customers" [ngValue]="customer">{{ customer.name }}</option>
-            </select>
+            <!-- <ng-select [items]="customers" bindLabel="name" bindValue="id" [(ngModel)]="selectedCustomer" placeholder=""
+                [searchable]="true" [clearable]="true" [searchFn]="customSearchFn">
+            </ng-select> -->
+            <!-- <ng-select [items]="customers" bindLabel="name" bindValue="id" [(ngModel)]="selectedCustomer" placeholder=""
+                [searchable]="true" [clearable]="true" [searchFn]="customSearchFn"
+                [notFoundText]="'No customer found.'">
+
+                <ng-template ng-notfound-tmp>
+                    <div style="padding: 10px; text-align: center;">
+                        No customers found.
+                        <br />
+                        <button (click)="openAddCustomerModal()" style="margin-top: 8px;" class="add-button">
+                            ➕ Add New Customer
+                        </button>
+                    </div>
+                </ng-template>
+            </ng-select> -->
+            <ng-select #customerSelect [items]="customers" bindLabel="name" bindValue="id"
+                [(ngModel)]="selectedCustomer" placeholder="" [searchable]="true" [clearable]="true"
+                [searchFn]="customSearchFn" [notFoundText]="'No customer found.'"
+                (search)="onCustomerSearch($event.term)">
+
+                <ng-template ng-notfound-tmp>
+                    <div style="padding: 10px; text-align: center;">
+                        No customers found.
+                        <br />
+                        <button (click)="openAddCustomerModal(latestSearchTerm, customerSelect)"
+                            style="margin-top: 8px;" class="add-button">
+                            ➕ Add "{{ latestSearchTerm }}" as New Customer
+                        </button>
+                    </div>
+                </ng-template>
+            </ng-select>
+
         </label>
 
         <label>Payment Method
@@ -117,6 +151,28 @@
         </button>
         <div *ngIf="errorMessage" class="error-message">
             ⚠️ {{ errorMessage }}
+        </div>
+    </div>
+</div>
+
+<!-- Add Customer Modal -->
+<div *ngIf="showAddCustomerModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Add New Customer</h3>
+
+        <label>Name</label>
+        <input [(ngModel)]="addCustomerName" (blur)="nameTouched = true"
+            [class.invalid]="nameTouched && !addCustomerName" placeholder="Enter name" />
+        <div class="error" *ngIf="nameTouched && !addCustomerName">Name is required</div>
+
+        <label>Phone</label>
+        <input [(ngModel)]="addCustomerPhone" (blur)="phoneTouched = true" [class.invalid]="isAddCustomerPhoneInvalid()"
+            placeholder="Enter 10-digit phone number" />
+        <div class="error" *ngIf="isPhoneInvalid">Enter valid 10-digit phone number</div>
+
+        <div class="modal-actions">
+            <button (click)="submitNewCustomer()">Add</button>
+            <button (click)="closeAddCustomerModal()">Cancel</button>
         </div>
     </div>
 </div>
