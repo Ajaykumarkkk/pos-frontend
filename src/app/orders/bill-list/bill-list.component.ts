@@ -222,7 +222,7 @@ export class BillListComponent {
     </div>
     <div style="text-align: justify; margin-bottom: 4px;">
       விதை, உரம், பூச்சி மருந்து, மாட்டுத் தீவனம் மற்றும் நவதானிய வியாபாரம் (நவதானிய விற்பனை மற்றும் கொள்முதல் நிலையம்) <br>
-      உரிமையாளர்: T.பாலமுருகன் Cell: 93422 62857, 88706 17061 <br>
+      உரிமையாளர்:&nbspT.பாலமுருகன் Cell:&nbsp93422&nbsp62857,&nbsp88706&nbsp17061 <br>
       முகவரி: 3/280, கயத்தார்–தேவர்குளம் மெயின் ரோடு, மேல இலந்தைக்குளம் – 627951
     </div>
     <div style="text-align: center; font-weight: bold; margin-bottom: 6px;">
@@ -245,8 +245,8 @@ export class BillListComponent {
       </thead>
       <tbody>${itemsHTML}</tbody>
     </table>
+    <div style="display: flex; justify-content: flex-end; font-weight: bold; font-size: 13px; margin-top: 2px;">Total Amount: ₹${bill.total.toFixed(2)}</div>
     <div>Total Items: ${bill.items.length}</div>
-    <div>Total Amount: ₹${bill.total.toFixed(2)}</div>
     <div>Customer Pays: ₹${bill.customerPays.toFixed(2)}</div>
     <div>Balance Returned: ₹${bill.remaining.toFixed(2)}</div>
     <div>Status: ${bill.status}</div>
