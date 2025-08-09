@@ -25,6 +25,7 @@
     "@ng-select/ng-select": "^10.0.0",
     "@swimlane/ngx-charts": "^20.1.0",
     "gapi-script": "^1.2.0",
+    "jspdf": "^3.0.1",
     "moment": "^2.30.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
